@@ -1,4 +1,5 @@
 #include <player.h>
+#include "zombiearena.h"
 
 int main()
 {
@@ -26,6 +27,10 @@ int main()
     Player player;
 
     sf::IntRect arena;
+
+    sf::VertexArray background;
+    sf::Texture textureBackground;
+    textureBackground.loadFromFile("/home/sambio/Documents/ZombieArena/ZombieArena/assets/graphics/background_sheet.png");
 
     while (window.isOpen()) {
         sf::Event event;
@@ -99,7 +104,9 @@ int main()
                 arena.left = 0;
                 arena.top = 0;
 
-                uint32_t tileSize = 50;
+
+
+                uint32_t tileSize = static_cast<uint32_t>(createBackground(background, arena));
 
                 player.spawn(arena, resolution, tileSize);
                 clock.restart();
@@ -120,6 +127,7 @@ int main()
         if (state == State::PLAYING) {
             window.clear();
             window.setView(mainView);
+            window.draw(background, &textureBackground);
             window.draw(player.getSprite());
 
             if (state == State::LEVELING_UP) {
