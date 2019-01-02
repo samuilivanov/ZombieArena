@@ -17,7 +17,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     player.cpp \
-    createbackground.cpp
+    createbackground.cpp \
+    textureholder.cpp \
+    zombie.cpp \
+    createhorde.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -32,4 +35,6 @@ LIBS += -lsfml-system
 
 HEADERS += \
     player.h \
-    zombiearena.h
+    zombiearena.h \
+    textureholder.h \
+    zombie.h

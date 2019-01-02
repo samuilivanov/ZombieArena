@@ -16,7 +16,7 @@ private:
     sf::Texture m_Texture;
     sf::Vector2f m_Resolution;
     sf::IntRect m_Arena;
-    uint32_t m_TileSize;
+    int32_t m_TileSize;
     bool m_UpPressed;
     bool m_DownPressed;
     bool m_LeftPressed;
@@ -30,7 +30,7 @@ private:
     float m_Speed;
 public:
     Player();
-    void spawn(sf::IntRect arena, sf::Vector2f resolution, uint32_t tileSize);
+    void spawn(sf::IntRect arena, sf::Vector2f resolution, int32_t tileSize);
     void resetPlayerStats();
     bool hit(sf::Time timeHit);
     sf::Time getLastHitTime();
@@ -49,7 +49,7 @@ public:
     void update(float elapsedTime, sf::Vector2i mousePosition);
     void upgradeSpeed();
     void upgradeHealth();
-    void increaseHealthLevel(uint32_t amount);
+    void increaseHealthLevel(int32_t amount);
     int32_t getHealth();
 };
 

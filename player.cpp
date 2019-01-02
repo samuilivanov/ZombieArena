@@ -13,7 +13,7 @@ Player::Player()
 }
 
 void Player::spawn(sf::IntRect arena, sf::Vector2f resolution,
-                                            uint32_t tileSize)
+                                            int32_t tileSize)
 {
     this->m_Position.x = arena.width / 2;
     this->m_Position.y = arena.height / 2;
@@ -134,28 +134,20 @@ void Player::update(float elapsedTime, sf::Vector2i mousePosition)
 
     this->m_Sprite.setPosition(m_Position);
 
-    if (this->m_Position.x > static_cast<uint32_t>(this->m_Arena.width) -
-                                                        this->m_TileSize) {
-        this->m_Position.x = static_cast<uint32_t>(this->m_Arena.width) -
-                                                        this->m_TileSize;
+    if (this->m_Position.x > this->m_Arena.width - this->m_TileSize) {
+        this->m_Position.x = this->m_Arena.width - this->m_TileSize;
     }
 
-    if (this->m_Position.x < static_cast<uint32_t>(this->m_Arena.left) +
-                                                        this->m_TileSize) {
-        this->m_Position.x = static_cast<uint32_t>(this->m_Arena.left) +
-                                                        this->m_TileSize;
+    if (this->m_Position.x < this->m_Arena.left + this->m_TileSize) {
+        this->m_Position.x = this->m_Arena.left + this->m_TileSize;
     }
 
-    if (this->m_Position.y > static_cast<uint32_t>(this->m_Arena.height) -
-                                                        this->m_TileSize) {
-        this->m_Position.y = static_cast<uint32_t>(this->m_Arena.height) -
-                                                        this->m_TileSize;
+    if (this->m_Position.y > this->m_Arena.height - this->m_TileSize) {
+        this->m_Position.y = this->m_Arena.height - this->m_TileSize;
     }
 
-    if (this->m_Position.y > static_cast<uint32_t>(this->m_Arena.top) -
-                                                        this->m_TileSize) {
-        this->m_Position.y = static_cast<uint32_t>(this->m_Arena.top) -
-                                                        this->m_TileSize;
+    if (this->m_Position.y < this->m_Arena.top + this->m_TileSize) {
+        this->m_Position.y = this->m_Arena.top + this->m_TileSize;
     }
     float angle = (atan2(mousePosition.y - this->m_Resolution.y / 2.0,
                          mousePosition.x - this->m_Resolution.x / 2.0) *
@@ -174,7 +166,7 @@ void Player::upgradeHealth()
     this->m_Health += (START_HEALTH * 0.2);
 }
 
-void Player::increaseHealthLevel(uint32_t amount)
+void Player::increaseHealthLevel(int32_t amount)
 {
     this->m_Health += amount;
     if (this->m_Health > this->m_MaxHealth) {

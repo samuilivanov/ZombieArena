@@ -1,8 +1,10 @@
 #include <player.h>
 #include "zombiearena.h"
+#include "textureholder.h"
 
 int main()
 {
+    TextureHolder holder;
     enum class State
     {
         PAUSED, LEVELING_UP, GAME_OVER, PLAYING
@@ -31,6 +33,9 @@ int main()
     sf::VertexArray background;
     sf::Texture textureBackground;
     textureBackground.loadFromFile("/home/sambio/Documents/ZombieArena/ZombieArena/assets/graphics/background_sheet.png");
+    int numZombies;
+    int numZombiesAlive;
+    Zombie *zombies = nullptr;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -106,9 +111,13 @@ int main()
 
 
 
-                uint32_t tileSize = static_cast<uint32_t>(createBackground(background, arena));
+                int32_t tileSize = createBackground(background, arena);
 
                 player.spawn(arena, resolution, tileSize);
+                numZombies = 10;
+                delete[] zombies;
+                zombies = zombieHorde(numZombies, arena);
+                numZombiesAlive = numZombies;
                 clock.restart();
             }
         } // End of Leveling Up
@@ -122,12 +131,20 @@ int main()
             player.update(dtAsSeconds, sf::Mouse::getPosition());
             sf::Vector2f playerPostition(player.getCenter());
             mainView.setCenter(player.getCenter());
-        } // End update player
 
+            for (int i = 0; i < numZombies; ++i) {
+                if (zombies[i].isAvlive()) {
+                    zombies[i].update(dt.asSeconds(), playerPostition);
+                }
+            }
+        } // End update player
         if (state == State::PLAYING) {
             window.clear();
             window.setView(mainView);
             window.draw(background, &textureBackground);
+            for (int i = 0; i < numZombies; ++i) {
+                window.draw(zombies[i].getSprite());
+            }
             window.draw(player.getSprite());
 
             if (state == State::LEVELING_UP) {
@@ -142,6 +159,6 @@ int main()
             window.display();
         }
     }
-
+    delete[] zombies;
     return 0;
 }

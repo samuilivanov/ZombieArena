@@ -14,7 +14,7 @@ int createBackground(sf::VertexArray &rVA, sf::IntRect arena)
 
     rVA.resize(worldWidth * worldHeight * VERT_IN_QUAD);
 
-    uint32_t currentVertex = 0;
+    int32_t currentVertex = 0;
 
     for (int w = 0; w < worldWidth; ++w) {
         for (int h = 0; h < worldHeight; ++h) {
