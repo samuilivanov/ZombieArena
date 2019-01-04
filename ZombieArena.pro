@@ -15,12 +15,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
     player.cpp \
     createbackground.cpp \
     textureholder.cpp \
     zombie.cpp \
-    createhorde.cpp
+    createhorde.cpp \
+    zombiearena.cpp \
+    bullet.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -37,4 +38,5 @@ HEADERS += \
     player.h \
     zombiearena.h \
     textureholder.h \
-    zombie.h
+    zombie.h \
+    bullet.h

@@ -82,6 +82,6 @@ void Zombie::update(float elapsedTime, sf::Vector2f playerLocation)
     }
 
     m_Sprite.setPosition(m_Position);
-    float angle = (atan2(playerY - m_Position.y, playerX - m_Position.x) * 180 / 3.14);
+    float angle = (atan2(playerY - m_Position.y, playerX - m_Position.x) * 180) / 3.14;
     m_Sprite.setRotation(angle);
 }

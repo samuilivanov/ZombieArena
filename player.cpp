@@ -1,5 +1,5 @@
 #include "player.h"
-
+#include "textureholder.h"
 Player::Player()
 {
     this->m_Speed = START_SPEED;
@@ -7,8 +7,7 @@ Player::Player()
     this->m_MaxHealth = START_HEALTH;
 
     // TODO:: chech if not loaded texture
-    this->m_Texture.loadFromFile("/home/sambio/Documents/ZombieArena/ZombieArena/assets/graphics/player.png");
-    this->m_Sprite.setTexture(this->m_Texture);
+    this->m_Sprite = sf::Sprite(TextureHolder::GetTexture("/home/sambio/Documents/ZombieArena/ZombieArena/assets/graphics/player.png"));
     this->m_Sprite.setOrigin(25, 25);
 }
 
@@ -149,9 +148,8 @@ void Player::update(float elapsedTime, sf::Vector2i mousePosition)
     if (this->m_Position.y < this->m_Arena.top + this->m_TileSize) {
         this->m_Position.y = this->m_Arena.top + this->m_TileSize;
     }
-    float angle = (atan2(mousePosition.y - this->m_Resolution.y / 2.0,
-                         mousePosition.x - this->m_Resolution.x / 2.0) *
-                                                        180.0) / 3.141;
+    float angle = (atan2(mousePosition.y - this->m_Resolution.y / 2,
+                         mousePosition.x - this->m_Resolution.x / 2) * 180.0) / 3.141;
 
     this->m_Sprite.setRotation(angle);
 }

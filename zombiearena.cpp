@@ -1,6 +1,8 @@
-#include <player.h>
+#include "player.h"
+#include <iostream>
 #include "zombiearena.h"
 #include "textureholder.h"
+#include "bullet.h"
 
 int main()
 {
@@ -16,8 +18,7 @@ int main()
     resolution.x = sf::VideoMode::getDesktopMode().width;
     resolution.y = sf::VideoMode::getDesktopMode().height;
 
-    sf::RenderWindow window(sf::VideoMode(static_cast<uint32_t>(resolution.x),
-                                          static_cast<uint32_t>(resolution.y)),
+    sf::RenderWindow window(sf::VideoMode(resolution.x, resolution.y),
                                         "Zombie Arena", sf::Style::Fullscreen);
     sf::View mainView(sf::FloatRect(0, 0, resolution.x, resolution.y));
     sf::Clock clock;
@@ -31,11 +32,18 @@ int main()
     sf::IntRect arena;
 
     sf::VertexArray background;
-    sf::Texture textureBackground;
-    textureBackground.loadFromFile("/home/sambio/Documents/ZombieArena/ZombieArena/assets/graphics/background_sheet.png");
+    sf::Texture textureBackground = TextureHolder::GetTexture("/home/sambio/Documents/ZombieArena/ZombieArena/assets/graphics/background_sheet.png");
     int numZombies;
     int numZombiesAlive;
     Zombie *zombies = nullptr;
+
+    Bullet bullets[100];
+    int currentBullet = 0;
+    int bulletSpare = 24;
+    int bulletsInClip = 6;
+    int clipSize = 6;
+    float fireRate = 1;
+    sf::Time lastPressed;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -53,9 +61,18 @@ int main()
                     state = State::LEVELING_UP;
                 }
                 if (state == State::PLAYING) {
-
+                    if (event.key.code == sf::Keyboard::R) {
+                        if (bulletSpare >= clipSize) {
+                            bulletsInClip = clipSize;
+                            bulletSpare -= clipSize;
+                        } else if (bulletSpare > 0) {
+                            bulletsInClip = bulletSpare;
+                            bulletSpare = 0;
+                        } else {
+                            // More
+                        }
+                    }
                 }
-
             }
         } //End event polling
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -81,6 +98,19 @@ int main()
                 player.moveRight();
             } else {
                 player.stopRight();
+            }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                std::cout << "left\n";
+
+                if (gameTimeTotal.asMilliseconds() - lastPressed.asMilliseconds() > 1000 / fireRate && bulletsInClip > 0) {
+                    bullets[currentBullet].shoot(player.getCenter().x, player.getCenter().y, mouseWorldPosition.x, mouseWorldPosition.y);
+                    currentBullet++;
+                    if (currentBullet > 99) {
+                        currentBullet = 0;
+                    }
+                    lastPressed = gameTimeTotal;
+                    bulletsInClip--;
+                }
             }
         } // End of WASD move
 
@@ -108,9 +138,6 @@ int main()
                 arena.height = 500;
                 arena.left = 0;
                 arena.top = 0;
-
-
-
                 int32_t tileSize = createBackground(background, arena);
 
                 player.spawn(arena, resolution, tileSize);
@@ -137,6 +164,12 @@ int main()
                     zombies[i].update(dt.asSeconds(), playerPostition);
                 }
             }
+
+            for (int i = 0; i < 100; ++i) {
+                if (bullets[i].isInFlight()) {
+                    bullets[i].update(dtAsSeconds);
+                }
+            }
         } // End update player
         if (state == State::PLAYING) {
             window.clear();
@@ -144,6 +177,11 @@ int main()
             window.draw(background, &textureBackground);
             for (int i = 0; i < numZombies; ++i) {
                 window.draw(zombies[i].getSprite());
+            }
+            for (int i = 0; i < 100; ++i) {
+                if (bullets[i].isInFlight()) {
+                    window.draw(bullets[i].getShape());
+                }
             }
             window.draw(player.getSprite());
 
